@@ -1,172 +1,142 @@
-
-import Color exposing (..)
-import Html exposing(..)
-import Color exposing (..)
-import Element exposing (..)
-import Collage exposing (..)
 import Html.Events exposing (onClick)
 import Html exposing(..)
-import Color exposing (..)
-import Element exposing (..)
-import Collage exposing (..)
+import Html.Attributes as Attr
+import Svg exposing (..)
+import Svg.Attributes exposing (..)
+import Array exposing (Array)
+import Array as Array
+import Svg.Attributes as SvgAttr
+
+
+
 
 main =
   Html.beginnerProgram {
       model = model,
-      update = update, 
+      update = update,
       view = view
       }
 
--- model --
-type alias Model =  {
-    board : Board, 
-    gamerOne : Bool, 
-    gamerTwo : Bool }
 
 
-model : Model    
-model = Model board2 True False 
+type alias Model = {
+    gamerOne : Bool,
+    gamerTwo : Bool
+}
 
+model : Model
+model = Model True False
 
-view : Model -> Html Msg 
+view : Model -> Html Msg
 view model =
-    div []
-        [ button [onClick ChangeToGamerTwo] [Html.text "Passer au Joueur 2"],
-          button [onClick ChangeToGamerOne] [Html.text "Passer au joueur 1"],
-          div [] [ Html.text (toString model.gamerOne) ],
-          div [] [ Html.text (toString model.gamerTwo) ], 
-          generateBoard board]  
+    Html.div
+        []
+        [ Html.h1 [] [ Html.text (" coucou toi " ) ]
+       , renderCell "2" "3" Empty
+       , renderCell "3" "3" OccupiedBlack
+       , renderCell "4" "3" OccupiedWhite
+        ]
+
+-----------------
 
 
-type alias Square = {x : Float, y : Float, size : Float, aColor : Color }
-type alias Board = List Square
+renderCell : String -> String ->Cell -> Html Msg
+renderCell ax by cell =
+    svg
+        [ SvgAttr.width "40"
+        , SvgAttr.height "40"
+        , SvgAttr.viewBox "-5 -5 10 10"
+        ]
+        (Svg.rect [ SvgAttr.x ax, SvgAttr.y by, SvgAttr.width "10", SvgAttr.height "10", SvgAttr.fill "green" ] []
+            :: case cell of
+                Empty ->
+                    [ Svg.circle
+                        [ Attr.style
+                            [ ( "cursor"  , "default"
+                         --     , if highlighted then
+                         ---           "pointer"
+                         --       else
+                          --            "default"
+                              )
+                            ]
+               --         , Events.onMouseEnter (Hoover (Just coord))
+               --         , Events.onMouseLeave (Hoover Nothing)
+                --        , Events.onClick (ClickAt coord)
+                        , SvgAttr.r "4.5"
+                        , SvgAttr.fill holeColor
+                  --          (if hooverOver then
+                  --              stoneColor player
+                  --           else if highlighted then
+                  --              highlightColor
+                  --           else
+                  --              holeColor
+                  --          )
+                        ]
+                        []
+                    ]
 
-generateBoard : Board -> Html.Html msg
-generateBoard param =
-    let
-       collageSize = 800
+                OccupiedBlack ->
+                    [ Svg.circle [ SvgAttr.r "4.5", SvgAttr.fill blackColor ] [] ]
 
-       makeSquare : Color -> Float -> Float -> Float -> Form
-       makeSquare color x y size =
-         let
-           padding = 1
-           realSize = size
-
-           toRealPosition : Float -> Float
-           toRealPosition x =
-                (x * (realSize + padding))
-         in
-           (move (toRealPosition x, toRealPosition y) (filled color (square size)))
-
-       generateForms : List Square -> List Form
-       generateForms board =
-            case board of
-                []         -> []
-                head::tail -> (makeSquare head.aColor head.x head.y head.size) :: (generateForms tail)
-
-       generateElement : List Form -> Element
-       generateElement forms =
-            collage collageSize collageSize forms
-
-    in
-        toHtml (generateElement (generateForms param))
+                OccupiedWhite ->
+                    [ Svg.circle [ SvgAttr.r "4.5", SvgAttr.fill whiteColor ] [] ]
+        )
 
 
 
-type Msg = ChangeToGamerOne | ChangeToGamerTwo 
+
+
+
+
+
+------------------
+
+
+
+
+type Cell
+   = Empty
+   | OccupiedBlack
+   | OccupiedWhite
+
+type Board
+   = Board (Array (Array Cell))
+
+
+type Msg = ChangeToGamerOne | ChangeToGamerTwo
 
 
 update msg model =
   case msg of
+
     ChangeToGamerTwo ->
-      {model| gamerOne =False, gamerTwo=True
+      {model| gamerOne =False,
+              gamerTwo =  True
               }
     ChangeToGamerOne ->
-       {model| gamerOne =True, gamerTwo=False
+      {model| gamerOne =True,
+              gamerTwo =  False
               }
 
 
-board2 : Board
-board2 = [
-        {x = 0, y = 1, size = 40, aColor = black}
-        ]
-
-board : Board
-board = [
-        {x = 0, y = 1, size = 40, aColor = brown},
-        {x = 1, y = 1, size = 40, aColor = green},
-        {x = 2, y = 1, size = 40, aColor = brown},
-        {x = 3, y = 1, size = 40, aColor = green},
-        {x = 4, y = 1, size = 40, aColor = brown},
-        {x = 5, y = 1, size = 40, aColor = green},
-        {x = 6, y = 1, size = 40, aColor = brown},
-        {x = 7, y = 1, size = 40, aColor = green},
-
-        {x = 0, y = 2, size = 40, aColor = green},
-        {x = 1, y = 2, size = 40, aColor = brown},
-        {x = 2, y = 2, size = 40, aColor = green},
-        {x = 3, y = 2, size = 40, aColor = brown},
-        {x = 4, y = 2, size = 40, aColor = green},
-        {x = 5, y = 2, size = 40, aColor = brown},
-        {x = 6, y = 2, size = 40, aColor = green},
-        {x = 7, y = 2, size = 40, aColor = brown},
-
-        {x = 0, y = 3, size = 40, aColor = brown},
-        {x = 1, y = 3, size = 40, aColor = green},
-        {x = 2, y = 3, size = 40, aColor = brown},
-        {x = 3, y = 3, size = 40, aColor = green},
-        {x = 4, y = 3, size = 40, aColor = brown},
-        {x = 5, y = 3, size = 40, aColor = green},
-        {x = 6, y = 3, size = 40, aColor = brown},
-        {x = 7, y = 3, size = 40, aColor = green},
-        
-
-        {x = 0, y = 4, size = 40, aColor = green},
-        {x = 1, y = 4, size = 40, aColor = brown},
-        {x = 2, y = 4, size = 40, aColor = green},
-        {x = 3, y = 4, size = 40, aColor = brown},
-        {x = 4, y = 4, size = 40, aColor = green},
-        {x = 5, y = 4, size = 40, aColor = brown},
-        {x = 6, y = 4, size = 40, aColor = green},
-        {x = 7, y = 4, size = 40, aColor = brown},
-
-        {x = 0, y = 5, size = 40, aColor = brown},
-        {x = 1, y = 5, size = 40, aColor = green},
-        {x = 2, y = 5, size = 40, aColor = brown},
-        {x = 3, y = 5, size = 40, aColor = green},
-        {x = 4, y = 5, size = 40, aColor = brown},
-        {x = 5, y = 5, size = 40, aColor = green},
-        {x = 6, y = 5, size = 40, aColor = brown},
-        {x = 7, y = 5, size = 40, aColor = green},
-        
-
-        {x = 0, y = 6, size = 40, aColor = green},
-        {x = 1, y = 6, size = 40, aColor = brown},
-        {x = 2, y = 6, size = 40, aColor = green},
-        {x = 3, y = 6, size = 40, aColor = brown},
-        {x = 4, y = 6, size = 40, aColor = green},
-        {x = 5, y = 6, size = 40, aColor = brown},
-        {x = 6, y = 6, size = 40, aColor = green},
-        {x = 7, y = 6, size = 40, aColor = brown},
-
-        {x = 0, y = 7, size = 40, aColor = brown},
-        {x = 1, y = 7, size = 40, aColor = green},
-        {x = 2, y = 7, size = 40, aColor = brown},
-        {x = 3, y = 7, size = 40, aColor = green},
-        {x = 4, y = 7, size = 40, aColor = brown},
-        {x = 5, y = 7, size = 40, aColor = green},
-        {x = 6, y = 7, size = 40, aColor = brown},
-        {x = 7, y = 7, size = 40, aColor = green},
-        
-
-        {x = 0, y = 8, size = 40, aColor = green},
-        {x = 1, y = 8, size = 40, aColor = brown},
-        {x = 2, y = 8, size = 40, aColor = green},
-        {x = 3, y = 8, size = 40, aColor = brown},
-        {x = 4, y = 8, size = 40, aColor = green},
-        {x = 5, y = 8, size = 40, aColor = brown},
-        {x = 6, y = 8, size = 40, aColor = green},
-        {x = 7, y = 8, size = 40, aColor = brown}
 
 
-        ]
+whiteColor : String
+whiteColor =
+    "#efefef"
+
+
+blackColor : String
+blackColor =
+    "#020202"
+
+
+highlightColor : String
+highlightColor =
+    "#77c777"
+
+
+holeColor : String
+holeColor =
+    "#77a777"
+
