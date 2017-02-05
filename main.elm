@@ -6,7 +6,7 @@ import Svg.Attributes exposing (..)
 import Array exposing (Array)
 import Array as Array
 import Svg.Attributes as SvgAttr
-
+import Html.Events as Events
 
 
 
@@ -32,9 +32,10 @@ view model =
     Html.div
         []
         [ Html.h1 [] [ Html.text (" coucou toi " ) ]
-       , renderCell "2" "3" Empty
-       , renderCell "3" "3" OccupiedBlack
-       , renderCell "4" "3" OccupiedWhite
+       , renderCell "3" "3" Empty
+    --   , renderCell "3" "3" OccupiedWhite
+      ,div [] [ Html.text (toString model.gamerOne) ]
+      ,div [] [ Html.text (toString model.gamerTwo) ]
         ]
 
 -----------------
@@ -43,49 +44,29 @@ view model =
 renderCell : String -> String ->Cell -> Html Msg
 renderCell ax by cell =
     svg
-        [ SvgAttr.width "40"
-        , SvgAttr.height "40"
-        , SvgAttr.viewBox "-5 -5 10 10"
-        ]
-        (Svg.rect [ SvgAttr.x ax, SvgAttr.y by, SvgAttr.width "10", SvgAttr.height "10", SvgAttr.fill "green" ] []
-            :: case cell of
+        [ version "1.1", x "0", y "0"
+           ]
+        (case cell of
                 Empty ->
-                    [ Svg.circle
-                        [ Attr.style
-                            [ ( "cursor"  , "default"
-                         --     , if highlighted then
-                         ---           "pointer"
-                         --       else
-                          --            "default"
-                              )
-                            ]
-               --         , Events.onMouseEnter (Hoover (Just coord))
-               --         , Events.onMouseLeave (Hoover Nothing)
-                --        , Events.onClick (ClickAt coord)
-                        , SvgAttr.r "4.5"
-                        , SvgAttr.fill holeColor
-                  --          (if hooverOver then
-                  --              stoneColor player
-                  --           else if highlighted then
-                  --              highlightColor
-                  --           else
-                  --              holeColor
-                  --          )
-                        ]
-                        []
+                    [Svg.rect [ fill holeColor, x "20", y "20", width "40px", height "40px",Events.onClick ChangeToGamerOne ] [],
+                    Svg.rect [ fill holeColor, x "20", y "61", width "40px", height "40px", Events.onClick ChangeToGamerTwo ] [],
+                    Svg.rect [ fill holeColor, x "20", y "102", width "40px", height "40px", Events.onClick ChangeToGamerOne ] [],
+                    Svg.rect [ fill holeColor, x "20", y "143", width "40px", height "40px", Events.onClick ChangeToGamerTwo ] [],
+                    Svg.rect [ fill holeColor, x "20", y "184", width "40px", height "40px", Events.onClick ChangeToGamerOne ] []
                     ]
-
                 OccupiedBlack ->
-                    [ Svg.circle [ SvgAttr.r "4.5", SvgAttr.fill blackColor ] [] ]
+                    [Svg.rect [ fill blackColor, x ax, y by, width "40px", height "40px" ] []]
 
                 OccupiedWhite ->
-                    [ Svg.circle [ SvgAttr.r "4.5", SvgAttr.fill whiteColor ] [] ]
+                    renderStone (holeColor)
         )
 
 
 
 
-
+renderStone : String -> List (Svg Msg)
+renderStone color =
+    [ Svg.circle [ SvgAttr.r "4.5", SvgAttr.fill color ] [] ]
 
 
 
