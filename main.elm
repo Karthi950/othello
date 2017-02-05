@@ -32,7 +32,7 @@ view model =
     Html.div
         []
         [ Html.h1 [] [ Html.text (" Maxime la pute" ) ]
-  --     , renderCell "3" "3" Empty
+       , renderCell "3" "3" Empty
     --   , renderCell "3" "3" OccupiedWhite
     --  ,div [] [ Html.text (toString model.gamerOne) ]
     --  ,div [] [ Html.text (toString model.gamerTwo) ]
@@ -48,7 +48,7 @@ renderCell ax by cell =
            ]
         (case cell of
                 Empty ->
-                    [Svg.rect [ fill holeColor, x "20", y "20", width "40px", height "40px",Events.onClick ChangeToGamerOne ] []
+                    [ Svg.rect [  fill holeColor, x "20", y "20", width "40px", height "40px",Events.onClick ChangeToGamerOne ] []
                     ]
                 OccupiedBlack ->
                     [Svg.rect [ fill blackColor, x ax, y by, width "40px", height "40px" ] []]
