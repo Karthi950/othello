@@ -31,13 +31,13 @@ view : Model -> Html Msg
 view model =
     Html.div
         []
-        [ Html.h1 [] [ Html.text (" Maxime la pute" ) ]
+        [ Html.h1 [] [ Html.text (" Othello" ) ]
      --  , renderCell "test" "3" "3" Empty
    --   , button [ onClick (renderStone2 "green") ] [ Html.text "Passer au joueur 1" ]
   --    , button [ onClick (renderCell "1" "3" "3" Empty) ] [ Html.text "Passer au joueur 1" ]
        , renderCell "1" "3" "3" Empty
-    --  ,div [] [ Html.text (toString model.gamerOne) ]
-    --  ,div [] [ Html.text (toString model.gamerTwo) ]
+     ,div [] [ Html.text (toString model.gamerOne) ]
+      ,div [] [ Html.text (toString model.gamerTwo) ]
         ]
 
 -----------------
@@ -86,27 +86,6 @@ update msg model =
 
 
 
-
-whiteColor : String
-whiteColor =
-    "#efefef"
-
-
-blackColor : String
-blackColor =
-    "#020202"
-
-
-highlightColor : String
-highlightColor =
-    "#77c777"
-
-
-holeColor : String
-holeColor =
-    "#77a777"
-
-
 --$( "svg" ).style.width = "900px";
 --$( "svg" ).style.height = "900px";
 ----------------
@@ -122,7 +101,7 @@ renderCell idCell ax by cell =
            ]
         (case cell of
                 Empty ->
-                    [ Svg.rect [ id "1", fill holeColor, x "20", y "20", width "40px", height "40px",Events.onClick (ChangeToGamerOne) ] []
+                    [ Svg.rect [ id "1", fill holeColor, x "20", y "20", width "40px", height "40px",Events.onClick (ChangeToGamerTwo) ] []
                     , Svg.rect [ id "2", fill holeColor, x "61", y "20", width "40px", height "40px",Events.onClick ChangeToGamerOne ] []
                     , Svg.rect [ id "3", fill holeColor, x "102", y "20", width "40px", height "40px",Events.onClick ChangeToGamerOne ] []
                     , Svg.rect [ id "4", fill holeColor, x "143", y "20", width "40px", height "40px",Events.onClick ChangeToGamerOne ] []
@@ -203,3 +182,26 @@ renderCell idCell ax by cell =
                 OccupiedWhite ->
                     renderStone (holeColor)
         )
+
+
+
+
+
+whiteColor : String
+whiteColor =
+    "#efefef"
+
+
+blackColor : String
+blackColor =
+    "#020202"
+
+
+highlightColor : String
+highlightColor =
+    "#77c777"
+
+
+holeColor : String
+holeColor =
+    "#77a777"
