@@ -3,6 +3,7 @@ import Html.Events exposing (onClick)
 
 import Svg exposing (svg, rect, line, circle, Svg)
 import Svg.Attributes exposing (..)
+import Html.Events as Events
 
 
 main =
@@ -32,6 +33,7 @@ h (a, b, color) =  circle [ cx ( toString <| (a)*45 ) , cy (toString <| (b)*45) 
 
 m: Int -> Int -> Svg Msg
 m a b = rect [fill "#77a777", x (toString <| (a+1)*40 ),y (toString <| (b+1)*40 ), width "40px", height "40px" ] []
+
 --m: (Int, Int, String) -> Svg Msg
 --model.board =List.map h [ (4,4,"#efefef"),(4,5,"#020202"),(5,4,"#efefef"),(5,5,"#020202") ]
 
@@ -56,5 +58,5 @@ view model =
      --   ( List.map (\c -> g c 0) <| List.range 0 8 )++
        ( List.map h [ (4,4,"#efefef"),(4,5,"#020202"),(5,4,"#efefef"),(5,5,"#020202") ] )
       ]
- --   , button [ onClick ( ) ] [ Html.text ("toto") ]
+   --, button [ onClick ( ) ] [ Html.text ("toto") ]
     ]
